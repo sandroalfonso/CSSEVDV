@@ -106,19 +106,28 @@ public class Register extends javax.swing.JPanel {
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         boolean checker = frame.secure.registerCheckPassEqual(passwordFld.getText(), confpassFld.getText());
         boolean check_fields = frame.secure.checkRegisterIfFilled(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
+        boolean checkIfValid_username = frame.secure.checkIfUsernameisValid(usernameFld.getText());
         
         if(check_fields == false){
              JOptionPane.showMessageDialog(frame, "Missing Fields");
+             frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
         }
         else{
+            if(checkIfValid_username == false){
+                JOptionPane.showMessageDialog(frame, "Username should contain at least 5 characters");
+            }
             if(checker == false){
                 JOptionPane.showMessageDialog(frame,"Password Does Not Match");
             }
-            else{
-                frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
-                frame.loginNav();
+            else if(checkIfValid_username == true && checker == true){
+                boolean checkIfValid_password = frame.secure.checkIfPasswordisValid(passwordFld.getText());
+                if(checkIfValid_password == true){
+                    frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
+                    frame.loginNav();
+                }
             }
         }
+            
         
         usernameFld.setText("");
         passwordFld.setText("");

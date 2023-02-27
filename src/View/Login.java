@@ -85,13 +85,18 @@ public class Login extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        if(frame.main.sqlite.checkUser(usernameFld.getText(), passwordFld.getText())){
+        boolean checkIfBlank = frame.secure.checkIfLoginBlank(usernameFld.getText(), passwordFld.getText());
+        
+        if(checkIfBlank == false){
+             JOptionPane.showMessageDialog(frame, "Missing Fields");
+        }
+        else if(frame.main.sqlite.checkUser(usernameFld.getText(), passwordFld.getText())){
             usernameFld.setText("");
             passwordFld.setText("");
             frame.mainNav();
         }else{
-            passwordFld.setText("");
-            JOptionPane.showMessageDialog(null,"Invalid username or password","Error Login", JOptionPane.ERROR_MESSAGE);
+                passwordFld.setText("");
+                JOptionPane.showMessageDialog(null,"Invalid username or password","Error Login", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 

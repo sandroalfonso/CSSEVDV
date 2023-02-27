@@ -342,4 +342,9 @@ public class SQLite {
         }
         return false;
         }
+    
+//    public boolean checkLockOut(){
+//        
+//    }
+    
 }
