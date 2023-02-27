@@ -1,6 +1,12 @@
 
 package View;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class Register extends javax.swing.JPanel {
@@ -107,10 +113,10 @@ public class Register extends javax.swing.JPanel {
         boolean checker = frame.secure.registerCheckPassEqual(passwordFld.getText(), confpassFld.getText());
         boolean check_fields = frame.secure.checkRegisterIfFilled(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
         boolean checkIfValid_username = frame.secure.checkIfUsernameisValid(usernameFld.getText());
-        
+        String password_checker = new String("");
         if(check_fields == false){
              JOptionPane.showMessageDialog(frame, "Missing Fields");
-             frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
+             frame.registerAction(usernameFld.getText(), passwordFld.getText());
         }
         else{
             if(checkIfValid_username == false){
@@ -121,8 +127,15 @@ public class Register extends javax.swing.JPanel {
             }
             else if(checkIfValid_username == true && checker == true){
                 boolean checkIfValid_password = frame.secure.checkIfPasswordisValid(passwordFld.getText());
+                
+                
                 if(checkIfValid_password == true){
-                    frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
+                    try {
+                         password_checker = new String(hashPassword(passwordFld.getText()));
+                    } catch (NoSuchAlgorithmException ex) {
+                        Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    frame.registerAction(usernameFld.getText(), password_checker);
                     frame.loginNav();
                 }
             }
@@ -142,7 +155,15 @@ public class Register extends javax.swing.JPanel {
         confpassFld.setText("");
         frame.loginNav();
     }//GEN-LAST:event_backBtnActionPerformed
-
+    public static String hashPassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hashBytes = md.digest(password.getBytes());
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
     private void passwordFldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordFldActionPerformed

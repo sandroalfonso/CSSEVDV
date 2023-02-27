@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import javax.swing.JOptionPane;
 public class SQLite {
     
     public int DEBUG_MODE = 0;
@@ -422,7 +423,7 @@ public class SQLite {
                           "timestamp INTEGER)");
              
              if (isAccountLockedOut(username.getText())) {
-                System.out.println("Account is locked out. Please try again later.");
+                JOptionPane.showMessageDialog(null, "Account is locked out. Please try again later.");
                 return false;
             }
 
@@ -431,15 +432,16 @@ public class SQLite {
                 System.out.println("Login successful!");
                 return true;
             } else {
-                System.out.println("Invalid username or password.");
+                JOptionPane.showMessageDialog(null, "Invalid username or password.");
+                
 
                 // Log login attempt
                 logLoginAttempt(username.getText());
 
                 // Check if account should be locked out
                 if (isAccountLockedOut(username.getText())) {
-                    System.out.println("Too many failed login attempts. Account is now locked out for 5 minutes.");
-                    password.setEnabled(false);
+                    JOptionPane.showMessageDialog(null, "Too many failed login attempts. Account is now locked out for 5 minutes.");
+
                     return false;
                 } else {
                     return false;
