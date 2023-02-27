@@ -96,9 +96,8 @@ public class Login extends javax.swing.JPanel {
             frame.mainNav();
         }
         else{
-                frame.main.sqlite.validateUser(usernameFld.getText(), passwordFld.getText());
+                frame.main.sqlite.login(usernameFld, passwordFld);
                 passwordFld.setText("");
-                passwordFld.setEnabled(false);
                 JOptionPane.showMessageDialog(null,"Invalid username or password","Error Login", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_loginBtnActionPerformed

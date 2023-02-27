@@ -346,140 +346,141 @@ public class SQLite {
         return false;
         }
     
-    public boolean validateUser(String username, String password) {
-    boolean isValidUser = false;
-    int maxFailedAttempts = 5; // Maximum number of failed attempts allowed
-    int lockoutDuration = 5; // Lockout duration in minutes
-    long lockoutEndTime = 0;
-
-    try (Connection conn = DriverManager.getConnection(driverURL);
-         Statement stmt = conn.createStatement()) {
-        String sql = "SELECT * FROM users WHERE username = '" + username + "'";
-        ResultSet rs = stmt.executeQuery(sql);
-
-        if (rs.next()) {
-            int id = rs.getInt("id");
-            String storedPassword = rs.getString("password");
-            int role = rs.getInt("role");
-            int locked = rs.getInt("locked");
-            int failedAttempts = rs.getInt("failed_attempt");
-            Timestamp lastFailedAttempt = rs.getTimestamp("last_failed_attempt");
-
-            if (locked == 1) {
-                // Account is locked, check if lockout duration has passed
-                long currentTime = System.currentTimeMillis();
-                long lockoutStartTime = lastFailedAttempt.getTime();
-                long elapsedMinutes = (currentTime - lockoutStartTime) / (60 * 1000);
-
-                if (elapsedMinutes >= lockoutDuration) {
-                    // Lockout duration has passed, unlock account
-                    sql = "UPDATE users SET locked = 0, failed_attempt = 0, last_failed_attempt = NULL WHERE id = " + id;
-                    stmt.executeUpdate(sql);
-                } else {
-                    // Account is still locked, throw exception
-                    throw new Exception("Account is locked. Please try again later.");
-                }
-            } else {
-                // Account is not locked, check password
-                if (storedPassword.equals(password)) {
-                    // Password is correct, reset failed attempts and return true
-                    sql = "UPDATE users SET failed_attempt = 0, last_failed_attempt = NULL WHERE id = " + id;
-                    stmt.executeUpdate(sql);
-                    isValidUser = true;
-                } else {
-                    // Password is incorrect, increment failed attempts
-                    int newFailedAttempts = failedAttempts + 1;
-
-                    if (newFailedAttempts >= maxFailedAttempts) {
-                        // Maximum number of failed attempts exceeded, lock account
-                        lockoutEndTime = System.currentTimeMillis() + (lockoutDuration * 60 * 1000);
-                        sql = "UPDATE users SET locked = 1, failed_attempt = " + newFailedAttempts + ", last_failed_attempt = '" + new Timestamp(lockoutEndTime) + "' WHERE id = " + id;
-                    } 
+//    public boolean validateUser(String username, String password) {
+//    boolean isValidUser = false;
+//    int maxFailedAttempts = 5; // Maximum number of failed attempts allowed
+//    int lockoutDuration = 5; // Lockout duration in minutes
+//    long lockoutEndTime = 0;
+//
+//    try (Connection conn = DriverManager.getConnection(driverURL);
+//         Statement stmt = conn.createStatement()) {
+//        String sql = "SELECT * FROM users WHERE username = '" + username + "'";
+//        ResultSet rs = stmt.executeQuery(sql);
+//
+//        if (rs.next()) {
+//            int id = rs.getInt("id");
+//            String storedPassword = rs.getString("password");
+//            int role = rs.getInt("role");
+//            int locked = rs.getInt("locked");
+//            int failedAttempts = rs.getInt("failed_attempt");
+//            Timestamp lastFailedAttempt = rs.getTimestamp("last_failed_attempt");
+//
+//            if (locked == 1) {
+//                // Account is locked, check if lockout duration has passed
+//                long currentTime = System.currentTimeMillis();
+//                long lockoutStartTime = lastFailedAttempt.getTime();
+//                long elapsedMinutes = (currentTime - lockoutStartTime) / (60 * 1000);
+//
+//                if (elapsedMinutes >= lockoutDuration) {
+//                    // Lockout duration has passed, unlock account
+//                    sql = "UPDATE users SET locked = 0, failed_attempt = 0, last_failed_attempt = NULL WHERE id = " + id;
+//                    stmt.executeUpdate(sql);
+//                } else {
+//                    // Account is still locked, throw exception
+//                    throw new Exception("Account is locked. Please try again later.");
+//                }
+//            } else {
+//                // Account is not locked, check password
+//                if (storedPassword.equals(password)) {
+//                    // Password is correct, reset failed attempts and return true
+//                    sql = "UPDATE users SET failed_attempt = 0, last_failed_attempt = NULL WHERE id = " + id;
+//                    stmt.executeUpdate(sql);
+//                    isValidUser = true;
+//                } else {
+//                    // Password is incorrect, increment failed attempts
+//                    int newFailedAttempts = failedAttempts + 1;
+//
+//                    if (newFailedAttempts >= maxFailedAttempts) {
+//                        // Maximum number of failed attempts exceeded, lock account
+//                        lockoutEndTime = System.currentTimeMillis() + (lockoutDuration * 60 * 1000);
+//                        sql = "UPDATE users SET locked = 1, failed_attempt = " + newFailedAttempts + ", last_failed_attempt = '" + new Timestamp(lockoutEndTime) + "' WHERE id = " + id;
+//                    } 
 //                    else {
 //                        // Increment failed attempts
 //                        sql = "UPDATE users SET failed_attempt = " + newFailedAttempts + ", last_failed_attempt = CURRENT_TIMESTAMP WHERE id = " + id;
 //                    }
-
-                    stmt.executeUpdate(sql);
-                    throw new Exception("Invalid username or password.");
-                }
-            }
-        } else {
-            // Username not found
-            throw new Exception("Invalid username or password.");
-        }
-    } catch (Exception ex) {
-        System.out.print(ex);
-    }
-
-    return isValidUser;
-}
-//    public boolean login(String username, String password){
-//        try (Connection conn = DriverManager.getConnection(driverURL);
-//             Statement stmt = conn.createStatement()){
-//             stmt.execute("CREATE TABLE IF NOT EXISTS login_attempts (" +
-//                          "username TEXT, " +
-//                          "timestamp INTEGER)");
-//             
-//             if (isAccountLockedOut(username)) {
-//                System.out.println("Account is locked out. Please try again later.");
-//                return false;
-//            }
 //
-//            // Check if username and password are valid
-//            if (isValidCredentials(username, password)) {
-//                System.out.println("Login successful!");
-//                return true;
-//            } else {
-//                System.out.println("Invalid username or password.");
-//
-//                // Log login attempt
-//                logLoginAttempt(username);
-//
-//                // Check if account should be locked out
-//                if (isAccountLockedOut(username)) {
-//                    System.out.println("Too many failed login attempts. Account is now locked out for 5 minutes.");
-//                    return false;
-//                } else {
-//                    return false;
+//                    stmt.executeUpdate(sql);
+//                    throw new Exception("Invalid username or password.");
 //                }
 //            }
-//        }catch(Exception e){
-//            return false;
+//        } else {
+//            // Username not found
+//            throw new Exception("Invalid username or password.");
 //        }
+//    } catch (Exception ex) {
+//        System.out.print(ex);
 //    }
-//    
-//    private boolean isValidCredentials(String username, String password) throws Exception{
-//        try (Connection conn = DriverManager.getConnection(driverURL);
-//             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?")) {
-//            stmt.setString(1, username);
-//            stmt.setString(2, password);
-//            try (ResultSet rs = stmt.executeQuery()) {
-//                return rs.next();
-//            }
-//        }
-//    }
-//    
-//    private void logLoginAttempt(String username) throws Exception{
-//        try (Connection conn = DriverManager.getConnection(driverURL);
-//            PreparedStatement stmt = conn.prepareStatement("INSERT INTO login_attempts (username, timestamp) VALUES (?, ?)")) {
-//            stmt.setString(1, username);
-//            stmt.setLong(2, System.currentTimeMillis());
-//            stmt.executeUpdate();
-//        }
-//    }
-//    
-//    private boolean isAccountLockedOut(String username) throws Exception{
-//        try (Connection conn = DriverManager.getConnection(driverURL);
-//             PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM login_attempts WHERE username = ? AND timestamp > ?")) {
-//            stmt.setString(1, username);
-//            stmt.setLong(2, System.currentTimeMillis() - LOCKOUT_TIME);
-//            try (ResultSet rs = stmt.executeQuery()) {
-//                rs.next();
-//                int count = rs.getInt(1);
-//                return count >= MAX_ATTEMPTS;
-//            }
-//        }
-//    }
+//
+//    return isValidUser;
+//}
+    public boolean login(javax.swing.JTextField username, javax.swing.JTextField password){
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             Statement stmt = conn.createStatement()){
+             stmt.execute("CREATE TABLE IF NOT EXISTS login_attempts (" +
+                          "username TEXT, " +
+                          "timestamp INTEGER)");
+             
+             if (isAccountLockedOut(username.getText())) {
+                System.out.println("Account is locked out. Please try again later.");
+                return false;
+            }
+
+            // Check if username and password are valid
+            if (isValidCredentials(username.getText(), password.getText())) {
+                System.out.println("Login successful!");
+                return true;
+            } else {
+                System.out.println("Invalid username or password.");
+
+                // Log login attempt
+                logLoginAttempt(username.getText());
+
+                // Check if account should be locked out
+                if (isAccountLockedOut(username.getText())) {
+                    System.out.println("Too many failed login attempts. Account is now locked out for 5 minutes.");
+                    password.setEnabled(false);
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+        }catch(Exception e){
+            return false;
+        }
+    }
+    
+    private boolean isValidCredentials(String username, String password) throws Exception{
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?")) {
+             stmt.setString(1, username);
+             stmt.setString(2, password);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+    
+    private void logLoginAttempt(String username) throws Exception{
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO login_attempts (username, timestamp) VALUES (?, ?)")) {
+            stmt.setString(1, username);
+            stmt.setLong(2, System.currentTimeMillis());
+            stmt.executeUpdate();
+        }
+    }
+    
+    private boolean isAccountLockedOut(String username) throws Exception{
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM login_attempts WHERE username = ? AND timestamp > ?")) {
+            stmt.setString(1, username);
+            stmt.setLong(2, System.currentTimeMillis() - LOCKOUT_TIME);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                int count = rs.getInt(1);
+                return count >= MAX_ATTEMPTS;
+            }
+        }
+    }
     
 }
