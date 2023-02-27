@@ -89,8 +89,8 @@ public class SQLite {
             + " username TEXT NOT NULL UNIQUE,\n"
             + " password TEXT NOT NULL,\n"
             + " role INTEGER DEFAULT 2,\n"
-            + " locked INTEGER DEFAULT 0\n"
-            + " failed_attempts INTEGER DEFAULT 0\n"
+            + " locked INTEGER DEFAULT 0,\n"
+            + " failed_attempt INTEGER DEFAULT 0\n"
             + ");";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -362,7 +362,7 @@ public class SQLite {
             String storedPassword = rs.getString("password");
             int role = rs.getInt("role");
             int locked = rs.getInt("locked");
-            int failedAttempts = rs.getInt("failed_attempts");
+            int failedAttempts = rs.getInt("failed_attempt");
             Timestamp lastFailedAttempt = rs.getTimestamp("last_failed_attempt");
 
             if (locked == 1) {
@@ -373,7 +373,7 @@ public class SQLite {
 
                 if (elapsedMinutes >= lockoutDuration) {
                     // Lockout duration has passed, unlock account
-                    sql = "UPDATE users SET locked = 0, failed_attempts = 0, last_failed_attempt = NULL WHERE id = " + id;
+                    sql = "UPDATE users SET locked = 0, failed_attempt = 0, last_failed_attempt = NULL WHERE id = " + id;
                     stmt.executeUpdate(sql);
                 } else {
                     // Account is still locked, throw exception
@@ -383,7 +383,7 @@ public class SQLite {
                 // Account is not locked, check password
                 if (storedPassword.equals(password)) {
                     // Password is correct, reset failed attempts and return true
-                    sql = "UPDATE users SET failed_attempts = 0, last_failed_attempt = NULL WHERE id = " + id;
+                    sql = "UPDATE users SET failed_attempt = 0, last_failed_attempt = NULL WHERE id = " + id;
                     stmt.executeUpdate(sql);
                     isValidUser = true;
                 } else {
@@ -393,11 +393,12 @@ public class SQLite {
                     if (newFailedAttempts >= maxFailedAttempts) {
                         // Maximum number of failed attempts exceeded, lock account
                         lockoutEndTime = System.currentTimeMillis() + (lockoutDuration * 60 * 1000);
-                        sql = "UPDATE users SET locked = 1, failed_attempts = " + newFailedAttempts + ", last_failed_attempt = '" + new Timestamp(lockoutEndTime) + "' WHERE id = " + id;
-                    } else {
-                        // Increment failed attempts
-                        sql = "UPDATE users SET failed_attempts = " + newFailedAttempts + ", last_failed_attempt = CURRENT_TIMESTAMP WHERE id = " + id;
-                    }
+                        sql = "UPDATE users SET locked = 1, failed_attempt = " + newFailedAttempts + ", last_failed_attempt = '" + new Timestamp(lockoutEndTime) + "' WHERE id = " + id;
+                    } 
+//                    else {
+//                        // Increment failed attempts
+//                        sql = "UPDATE users SET failed_attempt = " + newFailedAttempts + ", last_failed_attempt = CURRENT_TIMESTAMP WHERE id = " + id;
+//                    }
 
                     stmt.executeUpdate(sql);
                     throw new Exception("Invalid username or password.");

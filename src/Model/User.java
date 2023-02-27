@@ -6,7 +6,8 @@ public class User {
     private String password;
     private int role = 2;
     private int locked = 0;
-
+    private int failed_attempts = 0;
+    
     public User(){
         this.id = 0;
     }
@@ -57,5 +58,13 @@ public class User {
 
     public void setLocked(int locked) {
         this.locked = locked;
+    }
+    
+    public int getFailedAttempt(){
+        return failed_attempts;
+    }
+    
+    public void setFailedAttempt(int failed_attempts){
+        this.failed_attempts = failed_attempts;
     }
 }
