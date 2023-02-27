@@ -7,6 +7,7 @@ import Model.User;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -317,4 +318,28 @@ public class SQLite {
         }
         return product;
     }
+    
+    public boolean checkUser(String username, String password){
+        String sql = "SELECT id, username, password, role, locked FROM users WHERE username='"+username+"' AND password='"+password+"';";
+        User user = new User();
+        System.out.println(username);
+        System.out.println(password);
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                user = new User(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("role"),
+                        rs.getInt("locked"));
+            }
+            if(user.getId() != 0)
+                return true;
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return false;
+        }
 }
