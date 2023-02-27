@@ -1,7 +1,6 @@
 
 package View;
 
-import static View.Register.hashPassword;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -93,12 +92,10 @@ public class Login extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         boolean checkIfBlank = frame.secure.checkIfLoginBlank(usernameFld.getText(), passwordFld.getText());
-        String password_checker = new String("");
-         
+     
         if(checkIfBlank == false){
              JOptionPane.showMessageDialog(frame, "Missing Fields");
         }
-
         else if(frame.main.sqlite.checkUser(usernameFld.getText(), passwordFld.getText())){
             usernameFld.setText("");
             passwordFld.setText("");
@@ -115,14 +112,7 @@ public class Login extends javax.swing.JPanel {
         passwordFld.setText("");
         frame.registerNav();
     }//GEN-LAST:event_registerBtnActionPerformed
-    public static byte[] getHash(String input) throws NoSuchAlgorithmException{
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        return digest.digest(input.getBytes(StandardCharsets.UTF_8));
-    }
-    
-    private static boolean password_validation(byte[] hashed_pass1,byte[] hashed_pass2){
-        return Arrays.equals(hashed_pass1, hashed_pass2);
-    }
+  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

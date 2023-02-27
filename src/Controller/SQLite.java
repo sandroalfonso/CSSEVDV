@@ -347,74 +347,7 @@ public class SQLite {
         return false;
         }
     
-//    public boolean validateUser(String username, String password) {
-//    boolean isValidUser = false;
-//    int maxFailedAttempts = 5; // Maximum number of failed attempts allowed
-//    int lockoutDuration = 5; // Lockout duration in minutes
-//    long lockoutEndTime = 0;
-//
-//    try (Connection conn = DriverManager.getConnection(driverURL);
-//         Statement stmt = conn.createStatement()) {
-//        String sql = "SELECT * FROM users WHERE username = '" + username + "'";
-//        ResultSet rs = stmt.executeQuery(sql);
-//
-//        if (rs.next()) {
-//            int id = rs.getInt("id");
-//            String storedPassword = rs.getString("password");
-//            int role = rs.getInt("role");
-//            int locked = rs.getInt("locked");
-//            int failedAttempts = rs.getInt("failed_attempt");
-//            Timestamp lastFailedAttempt = rs.getTimestamp("last_failed_attempt");
-//
-//            if (locked == 1) {
-//                // Account is locked, check if lockout duration has passed
-//                long currentTime = System.currentTimeMillis();
-//                long lockoutStartTime = lastFailedAttempt.getTime();
-//                long elapsedMinutes = (currentTime - lockoutStartTime) / (60 * 1000);
-//
-//                if (elapsedMinutes >= lockoutDuration) {
-//                    // Lockout duration has passed, unlock account
-//                    sql = "UPDATE users SET locked = 0, failed_attempt = 0, last_failed_attempt = NULL WHERE id = " + id;
-//                    stmt.executeUpdate(sql);
-//                } else {
-//                    // Account is still locked, throw exception
-//                    throw new Exception("Account is locked. Please try again later.");
-//                }
-//            } else {
-//                // Account is not locked, check password
-//                if (storedPassword.equals(password)) {
-//                    // Password is correct, reset failed attempts and return true
-//                    sql = "UPDATE users SET failed_attempt = 0, last_failed_attempt = NULL WHERE id = " + id;
-//                    stmt.executeUpdate(sql);
-//                    isValidUser = true;
-//                } else {
-//                    // Password is incorrect, increment failed attempts
-//                    int newFailedAttempts = failedAttempts + 1;
-//
-//                    if (newFailedAttempts >= maxFailedAttempts) {
-//                        // Maximum number of failed attempts exceeded, lock account
-//                        lockoutEndTime = System.currentTimeMillis() + (lockoutDuration * 60 * 1000);
-//                        sql = "UPDATE users SET locked = 1, failed_attempt = " + newFailedAttempts + ", last_failed_attempt = '" + new Timestamp(lockoutEndTime) + "' WHERE id = " + id;
-//                    } 
-//                    else {
-//                        // Increment failed attempts
-//                        sql = "UPDATE users SET failed_attempt = " + newFailedAttempts + ", last_failed_attempt = CURRENT_TIMESTAMP WHERE id = " + id;
-//                    }
-//
-//                    stmt.executeUpdate(sql);
-//                    throw new Exception("Invalid username or password.");
-//                }
-//            }
-//        } else {
-//            // Username not found
-//            throw new Exception("Invalid username or password.");
-//        }
-//    } catch (Exception ex) {
-//        System.out.print(ex);
-//    }
-//
-//    return isValidUser;
-//}
+
     public boolean login(javax.swing.JTextField username, javax.swing.JTextField password){
         try (Connection conn = DriverManager.getConnection(driverURL);
              Statement stmt = conn.createStatement()){
