@@ -1,6 +1,8 @@
 
 package View;
 
+import Model.Control;
+import Model.User;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -99,10 +101,14 @@ public class Login extends javax.swing.JPanel {
         else if(frame.main.sqlite.checkUser(usernameFld.getText(), passwordFld.getText())){
             usernameFld.setText("");
             passwordFld.setText("");
+            User user = new User();
+            System.out.println(user.getRole());
             frame.mainNav();
         }
         else{
                 frame.main.sqlite.login(usernameFld, passwordFld);
+                User user = frame.main.sqlite.getUser(usernameFld.getText());
+                
                 passwordFld.setText("");     
             }
     }//GEN-LAST:event_loginBtnActionPerformed

@@ -2,6 +2,8 @@ package View;
 
 import Controller.Main;
 import Controller.Secure;
+import Model.Control;
+import Model.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -247,7 +249,57 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void mainNav(){
+        User user = new User();
+        
+        switch (user.getRole()) {
+            case 5:
+                // If user is an admin
+                this.adminBtn.setVisible(true);
+                this.managerBtn.setVisible(false);
+                this.staffBtn.setVisible(false);
+                this.clientBtn.setVisible(false);
+                adminHomePnl.showPnl("home");
+                contentView.show(Content, "adminHomePnl");
+                break;
+            case 4:
+                // If user is an manager
+                this.adminBtn.setVisible(false);
+                this.managerBtn.setVisible(true);
+                this.staffBtn.setVisible(false);
+                this.clientBtn.setVisible(false);
+                managerHomePnl.showPnl("home");
+                contentView.show(Content, "managerHomePnl");
+                break;
+            case 3:
+                // If user is an staff
+                this.adminBtn.setVisible(false);
+                this.managerBtn.setVisible(false);
+                this.staffBtn.setVisible(true);
+                this.clientBtn.setVisible(false);
+                staffHomePnl.showPnl("home");
+                contentView.show(Content, "staffHomePnl");
+                break;
+            case 2:
+                // If user is an client
+                this.adminBtn.setVisible(false);
+                this.managerBtn.setVisible(false);
+                this.staffBtn.setVisible(false);
+                this.clientBtn.setVisible(true);
+                clientHomePnl.showPnl("home");
+                contentView.show(Content, "clientHomePnl");
+                break;
+            case 1:
+                // If user is a super admin
+                this.adminBtn.setVisible(true);
+                this.managerBtn.setVisible(false);
+                this.staffBtn.setVisible(false);
+                this.clientBtn.setVisible(false);
+                adminHomePnl.showPnl("home");
+                contentView.show(Content, "adminHomePnl");
+                break;
+        }
         frameView.show(Container, "homePnl");
+        System.out.println(user.getRole());
     }
     
     public void loginNav(){

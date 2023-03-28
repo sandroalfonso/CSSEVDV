@@ -7,7 +7,11 @@ package View;
 
 import Controller.SQLite;
 import Model.Logs;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -135,14 +139,21 @@ public class MgmtLogs extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
-        
+        sqlite.deleteLogs();
+        init();
     }//GEN-LAST:event_clearBtnActionPerformed
 
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
-        if(sqlite.DEBUG_MODE == 1)
-            sqlite.DEBUG_MODE = 0;
-        else
-            sqlite.DEBUG_MODE = 1;
+        PrintStream consoleStream = new PrintStream(new FileOutputStream(FileDescriptor.out));
+        
+        if(sqlite.DEBUG_MODE == 1){  // ENABLING
+            JOptionPane.showMessageDialog(null, "Debug Mode Enabled", "Debug Mode Enabled", JOptionPane.NO_OPTION);
+            sqlite.DEBUG_MODE = 0;           
+        }
+        else{ // DISABLING             
+            JOptionPane.showMessageDialog(null, "Debug Mode Disabled", "Debug Mode Disabled", JOptionPane.NO_OPTION);
+            sqlite.DEBUG_MODE = 1; 
+        }
     }//GEN-LAST:event_debugBtnActionPerformed
 
 

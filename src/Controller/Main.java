@@ -49,10 +49,11 @@ public class Main {
 //        sqlite.addLogs("NOTICE", "manager", "User creation successful", new Timestamp(new Date().getTime()).toString());
 //        sqlite.addLogs("NOTICE", "admin", "User creation successful", new Timestamp(new Date().getTime()).toString());
 //        
-//        // Add sample product
+        // Add sample product
 //        sqlite.addProduct("Antivirus", 5, 500.0);
 //        sqlite.addProduct("Firewall", 3, 1000.0);
 //        sqlite.addProduct("Scanner", 10, 100.0);
+        
 //
 //        // Add sample users
 //        sqlite.addUser("admin", "qwerty1234" , 5);

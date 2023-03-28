@@ -7,7 +7,7 @@ public class User {
     private int role = 2;
     private int locked = 0;
     private int failed_attempts = 0;
-    
+    private static User user;
     public User(){
         this.id = 0;
     }
@@ -67,4 +67,6 @@ public class User {
     public void setFailedAttempt(int failed_attempts){
         this.failed_attempts = failed_attempts;
     }
+    
+
 }
