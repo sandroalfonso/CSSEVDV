@@ -99,10 +99,12 @@ public class Login extends javax.swing.JPanel {
              JOptionPane.showMessageDialog(frame, "Missing Fields");
         }
         else if(frame.main.sqlite.checkUser(usernameFld.getText(), passwordFld.getText())){
+            User user = frame.main.sqlite.getUser(usernameFld.getText());
+            //user = frame.main.sqlite.getUser(usernameFld.getText());
+            Control.loginUser(user);
+            System.out.println(user.getRole());
             usernameFld.setText("");
             passwordFld.setText("");
-            User user = new User();
-            System.out.println(user.getRole());
             frame.mainNav();
         }
         else{

@@ -249,9 +249,9 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void mainNav(){
-        User user = new User();
+       Control controls = Control.getInstance();
         
-        switch (user.getRole()) {
+        switch (controls.getRole()) {
             case 5:
                 // If user is an admin
                 this.adminBtn.setVisible(true);
@@ -298,8 +298,9 @@ public class Frame extends javax.swing.JFrame {
                 contentView.show(Content, "adminHomePnl");
                 break;
         }
+        System.out.println(controls.getRole());
         frameView.show(Container, "homePnl");
-        System.out.println(user.getRole());
+        
     }
     
     public void loginNav(){

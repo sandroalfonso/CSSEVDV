@@ -6,6 +6,7 @@
 package View;
 
 import Controller.SQLite;
+import Controller.Secure;
 import Model.User;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
@@ -24,7 +25,7 @@ public class MgmtUser extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
-    
+    public Secure secure = new Secure();
     public MgmtUser(SQLite sqlite) {
         initComponents();
         this.sqlite = sqlite;
@@ -246,6 +247,21 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println(password.getText());
                 System.out.println(confpass.getText());
+                
+                User user = sqlite.getUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                 if(user.getRole() == 1  && user.getRole() == 5){ // if account selected is superadmin and user is admin, throw error
+                     
+                     JOptionPane.showMessageDialog(null, "Error: Unauthorized Access", "Error: Unauthorized Access", JOptionPane.OK_OPTION);
+                 } else { 
+                    // if valid password  
+                    if(password.getText().equals(confpass.getText()) && secure.checkIfPasswordisValid(password.getText()) == true)
+                    {
+                        sqlite.updateUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
+                    } else{
+
+                         JOptionPane.showMessageDialog(null, "Error: Invalid Fields", "Error: Change Password", JOptionPane.OK_OPTION);
+                    }
+                 } 
             }
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed

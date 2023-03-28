@@ -565,26 +565,29 @@ public class SQLite {
     }
     
     public User getUser(String name){
-        String sql = "SELECT id, username, password, role, locked,, timestamp FROM users WHERE username=?";
-        User user = null;
-         try {
-            Connection conn = DriverManager.getConnection(driverURL);
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, name);
-            ResultSet rs = pstmt.executeQuery();
+    String sql = "SELECT id, username, password, role, locked FROM users WHERE username=?";
+    User user = null;
+    try {
+        Connection conn = DriverManager.getConnection(driverURL);
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, name);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
             user = new User(rs.getInt("id"),
-                                   rs.getString("username"),
-                                   rs.getString("password"),
-                                   rs.getInt("role"),
-                                   rs.getInt("locked"));
-            conn.close();
-        } catch (Exception ex) {
-            System.out.println(ex);
-            System.out.println("17");
-          
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getInt("role"),
+                    rs.getInt("locked"));
         }
-        return user;
+        conn.close();
+    } catch (Exception ex) {
+        System.out.println(ex);
+        System.out.println("17");
+        System.out.println(user);
     }
+        return user;
+}
+   
     
     
      public void updateProduct(String name, int newStock, float price){
@@ -603,15 +606,44 @@ public class SQLite {
             System.out.println("18");
         }
     }
+     
+    public void updateUser (String username, String password) {
+        
+        String sql = "UPDATE users SET password=? WHERE username=?";
+        
+        try { 
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, password);
+            pstmt.setString(2, username.toLowerCase());
+            pstmt.executeUpdate();
+            conn.close();
+            
+        } catch (Exception ex) {
+            System.out.println(ex);
+            System.out.println("13");
+        }
+    }
     
-}
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    public User claimUser(String username){
+        String sql = "SELECT id, username, password, role, locked FROM users WHERE username=?";
+        User user = this.getUser(username);
+        System.out.println(username);
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                user = new User(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("role"),
+                        rs.getInt("locked"));
+            }
+            conn.close();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+            return user;
+        }
+}    
