@@ -1,6 +1,7 @@
 package View;
 
 import Controller.SQLite;
+import Model.Control;
 import Model.History;
 import Model.Product;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class MgmtHistory extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    public Control controls;
     
     public MgmtHistory(SQLite sqlite) {
         initComponents();
@@ -38,8 +40,15 @@ public class MgmtHistory extends javax.swing.JPanel {
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
-        
+        this.controls = Control.getInstance();
         ArrayList<History> history = sqlite.getHistory();
+        
+        if(controls.getRole() == 2){
+             history = sqlite.getHistory(controls.getName());
+        }else{
+            history = sqlite.getHistory();
+        }
+        
         for(int nCtr = 0; nCtr < history.size(); nCtr++){
             Product product = sqlite.getProduct(history.get(nCtr).getName());
             tableModel.addRow(new Object[]{
@@ -169,6 +178,13 @@ public class MgmtHistory extends javax.swing.JPanel {
 
 //          LOAD CONTENTS
             ArrayList<History> history = sqlite.getHistory();
+            
+            if(controls.getRole() == 2){
+                history = sqlite.getHistory(controls.getName());
+            }else{
+                history = sqlite.getHistory();
+            }
+            
             for(int nCtr = 0; nCtr < history.size(); nCtr++){
                 if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
                    history.get(nCtr).getUsername().contains(searchFld.getText()) || 

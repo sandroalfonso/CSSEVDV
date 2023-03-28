@@ -216,8 +216,6 @@ public class MgmtProduct extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void purchaseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseBtnActionPerformed
-        User user = new User();
-        
         if(table.getSelectedRow() >= 0){
             JTextField stockFld = new JTextField("0");
             designer(stockFld, "PRODUCT STOCK");
@@ -235,6 +233,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                         if(Integer.parseInt(stockFld.getText()) != 0) {
                             sqlite.addHistory(controls.getName(), getProduct.getName(), Integer.parseInt(stockFld.getText()), new Timestamp(new Date().getTime()).toString());
                             sqlite.updateProduct(getProduct.getName(), getProduct.getStock() - Integer.parseInt(stockFld.getText()), getProduct.getPrice());     
+                            init();
                         } else {
                             JOptionPane.showMessageDialog(null, "Error: Invalid input.", "Error: Product purchase", JOptionPane.OK_OPTION);
                         }

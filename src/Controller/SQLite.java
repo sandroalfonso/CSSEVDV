@@ -239,6 +239,35 @@ public class SQLite {
         return history;
     }
     
+    public ArrayList<History> getHistory(String username){
+        String sql = "SELECT id, username, name, stock, timestamp FROM history WHERE username=?;";
+        ArrayList<History> histories = new ArrayList<History>();
+        
+        try {
+            
+            Connection conn = DriverManager.getConnection(driverURL);
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username.toLowerCase());
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while(rs.next()) {
+                histories.add(new History(rs.getInt("id"),
+                                   rs.getString("username"),
+                                   rs.getString("name"),
+                                   rs.getInt("stock"),
+                                   rs.getString("timestamp")));
+            }
+            
+            conn.close();
+        } catch (Exception ex) {
+            System.out.println(ex);
+            System.out.println("6");
+        }
+        return histories;
+    }
+    
     public ArrayList<Logs> getLogs(){
         String sql = "SELECT id, event, username, desc, timestamp FROM logs";
         ArrayList<Logs> logs = new ArrayList<Logs>();
@@ -332,6 +361,20 @@ public class SQLite {
             
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+    
+    public void removeHistory(String name){
+        String sql = "DELETE FROM history WHERE name=?;";
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            pstmt.executeUpdate();
+            conn.close();
+        } catch (Exception ex) {
+            System.out.println(ex);
+            System.out.println("18");
         }
     }
     

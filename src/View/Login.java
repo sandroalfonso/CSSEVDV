@@ -101,10 +101,17 @@ public class Login extends javax.swing.JPanel {
         else if(frame.main.sqlite.checkUser(usernameFld.getText(), passwordFld.getText())){
             User user = frame.main.sqlite.getUser(usernameFld.getText());
             Control.loginUser(user);
-            System.out.println(user.getRole());
-            usernameFld.setText("");
-            passwordFld.setText("");
-            frame.mainNav();
+            if(user.getLocked() == 1){
+                JOptionPane.showMessageDialog(frame, "Account Locked. Contact Admin to grant access.");
+                usernameFld.setText("");
+                passwordFld.setText("");
+            }
+            else{
+                //System.out.println("Lock Val: " + user.getLocked());
+                usernameFld.setText("");
+                passwordFld.setText("");
+                frame.mainNav();
+            }
         }
         else{
                 frame.main.sqlite.login(usernameFld, passwordFld);
