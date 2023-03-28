@@ -264,6 +264,8 @@ public class MgmtProduct extends javax.swing.JPanel {
 
         if (result == JOptionPane.OK_OPTION) {
             if(sqlite.getProduct(nameFld.getText()) == null){
+                
+                sqlite.addHistory(controls.getName(), nameFld.getText(), Integer.parseInt(stockFld.getText()), new Timestamp(new Date().getTime()).toString());
                 sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
                 init();
             }
