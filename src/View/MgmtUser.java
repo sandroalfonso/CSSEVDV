@@ -190,8 +190,6 @@ public class MgmtUser extends javax.swing.JPanel {
                 "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
             
             if(result != null){
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                System.out.println(result.charAt(0));
                 sqlite.editRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), Integer.parseInt(String.valueOf(result.charAt(0))));
                 init();
             }
@@ -219,7 +217,6 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-             //   System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 if(state.equals("lock")){
                     sqlite.editLocked(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), 1);
                 } else if(state.equals("unlock")){
@@ -253,12 +250,9 @@ public class MgmtUser extends javax.swing.JPanel {
                      
                      JOptionPane.showMessageDialog(null, "Error: Unauthorized Access", "Error: Unauthorized Access", JOptionPane.OK_OPTION);
                  } else { 
-                    // if valid password  
-                    if(password.getText().equals(confpass.getText()) && secure.checkIfPasswordisValid(password.getText()) == true)
-                    {
+                    if(password.getText().equals(confpass.getText()) && secure.checkIfPasswordisValid(password.getText()) == true){
                         sqlite.updateUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
                     } else{
-
                          JOptionPane.showMessageDialog(null, "Error: Invalid Fields", "Error: Change Password", JOptionPane.OK_OPTION);
                     }
                  } 

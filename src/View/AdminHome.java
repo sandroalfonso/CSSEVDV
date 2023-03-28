@@ -6,6 +6,7 @@
 package View;
 //[255,102,51]
 import Controller.SQLite;
+import Model.Control;
 import Model.History;
 import Model.Logs;
 import Model.Product;
@@ -25,6 +26,8 @@ public class AdminHome extends javax.swing.JPanel {
     public MgmtLogs mgmtLogs;
     public MgmtProduct mgmtProduct;
     public MgmtUser mgmtUser;
+    
+    public Control controls;
     
     private CardLayout contentView = new CardLayout();
     
@@ -48,7 +51,7 @@ public class AdminHome extends javax.swing.JPanel {
 //        UNCOMMENT TO DISABLE BUTTONS
 //        historyBtn.setVisible(false);
 //        usersBtn.setVisible(false);
-//        productsBtn.setVisible(false);
+        productsBtn.setVisible(false);
 //        logsBtn.setVisible(false);
     }
     

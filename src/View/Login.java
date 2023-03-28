@@ -100,7 +100,6 @@ public class Login extends javax.swing.JPanel {
         }
         else if(frame.main.sqlite.checkUser(usernameFld.getText(), passwordFld.getText())){
             User user = frame.main.sqlite.getUser(usernameFld.getText());
-            //user = frame.main.sqlite.getUser(usernameFld.getText());
             Control.loginUser(user);
             System.out.println(user.getRole());
             usernameFld.setText("");
@@ -110,7 +109,6 @@ public class Login extends javax.swing.JPanel {
         else{
                 frame.main.sqlite.login(usernameFld, passwordFld);
                 User user = frame.main.sqlite.getUser(usernameFld.getText());
-                
                 passwordFld.setText("");     
             }
     }//GEN-LAST:event_loginBtnActionPerformed

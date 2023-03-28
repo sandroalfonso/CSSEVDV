@@ -153,7 +153,7 @@ public class SQLite {
     }
     
     public void addHistory(String username, String name, int stock, String timestamp) {
-        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES('" + username + "','" + name + "','" + stock + "','" + timestamp + "')";
+        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES(?,?,?,?)";
         
         try {
             Connection conn = DriverManager.getConnection(driverURL);
@@ -165,8 +165,7 @@ public class SQLite {
             pstmt.executeUpdate();
             conn.close();
         } catch (Exception ex) {
-            System.out.print(ex);
-            System.out.println("1");
+            System.out.println(ex);
         }
     }
     
@@ -221,14 +220,14 @@ public class SQLite {
     
     public ArrayList<History> getHistory(){
         String sql = "SELECT id, username, name, stock, timestamp FROM history";
-        ArrayList<History> histories = new ArrayList<History>();
+        ArrayList<History> history = new ArrayList<History>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
             
             while (rs.next()) {
-                histories.add(new History(rs.getInt("id"),
+                history.add(new History(rs.getInt("id"),
                                    rs.getString("username"),
                                    rs.getString("name"),
                                    rs.getInt("stock"),
@@ -237,7 +236,7 @@ public class SQLite {
         } catch (Exception ex) {
             System.out.print(ex);
         }
-        return histories;
+        return history;
     }
     
     public ArrayList<Logs> getLogs(){
@@ -279,7 +278,6 @@ public class SQLite {
             conn.close();
         } catch (Exception ex) {
             System.out.println(ex);
-            System.out.println("8");
         }
         return products;
     }
@@ -303,9 +301,6 @@ public class SQLite {
         return users;
     }
     
-    
-    
-    
     public void updateProduct(String name, String oldProdName, int newStock, float newPrice){
         String sql = "UPDATE product SET name=?, stock=?, price=? WHERE name=?;";
         try {
@@ -318,8 +313,6 @@ public class SQLite {
             pstmt.setFloat(3, newPrice);
             pstmt.setString(4, oldProdName);
             pstmt.executeUpdate();
-            this.addLogs("UPDATE", name, "Successfully updated " + name + " stocks.", new Timestamp(new Date().getTime()).toString());
-            
             conn.close();
         } catch (Exception ex) {
             System.out.println(ex);
@@ -380,7 +373,6 @@ public class SQLite {
             conn.close();
         } catch (Exception ex) {
             System.out.println(ex);
-            System.out.println("17");
         }
         return product;
     }
@@ -392,7 +384,6 @@ public class SQLite {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, name);
             pstmt.executeUpdate();
-            this.addLogs("DELETE", name, "Successfully deleted "+ name + " from products.", new Timestamp(new Date().getTime()).toString());
             conn.close();
         } catch (Exception ex) {
             System.out.println(ex);
@@ -506,21 +497,16 @@ public class SQLite {
                 return false;
             }
 
-            // Check if username and password are valid
             if (isValidCredentials(username.getText(), password.getText())) {
                 System.out.println("Login successful!");
                 return true;
             } else {
                 JOptionPane.showMessageDialog(null, "Invalid username or password.");
                 
-
-                // Log login attempt
                 logLoginAttempt(username.getText());
 
-                // Check if account should be locked out
                 if (isAccountLockedOut(username.getText())) {
                     JOptionPane.showMessageDialog(null, "Too many failed login attempts. Account is now locked out for 5 minutes.");
-
                     return false;
                 } else {
                     return false;
@@ -582,13 +568,9 @@ public class SQLite {
         conn.close();
     } catch (Exception ex) {
         System.out.println(ex);
-        System.out.println("17");
-        System.out.println(user);
     }
         return user;
 }
-   
-    
     
      public void updateProduct(String name, int newStock, float price){
         String sql = "UPDATE product SET name=?, stock=?, price=? WHERE name=?;";
@@ -603,7 +585,6 @@ public class SQLite {
             conn.close();
         } catch (Exception ex) {
             System.out.println(ex);
-            System.out.println("18");
         }
     }
      
@@ -621,7 +602,6 @@ public class SQLite {
             
         } catch (Exception ex) {
             System.out.println(ex);
-            System.out.println("13");
         }
     }
     
